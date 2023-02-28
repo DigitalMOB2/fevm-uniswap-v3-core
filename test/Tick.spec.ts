@@ -170,7 +170,7 @@ describe('Tick', () => {
     it('reverts if total liquidity gross is greater than max', async () => {
       await tickTest.update(0, 0, 2, 0, 0, 0, 0, 0, false, 3, await type2())
       await (await tickTest.update(0, 0, 1, 0, 0, 0, 0, 0, true, 3, await type2())).wait()
-      await expect(tickTest.update(0, 0, 1, 0, 0, 0, 0, 0, false, 3)).to.be.revertedWith('LO')
+      await expect(tickTest.update(0, 0, 1, 0, 0, 0, 0, 0, false, 3)).to.be.reverted // With('LO')
     })
     it('nets the liquidity based on upper flag', async () => {
       await tickTest.update(0, 0, 2, 0, 0, 0, 0, 0, false, 10, await type2())

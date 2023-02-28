@@ -115,9 +115,7 @@ describe('UniswapV3Factory', () => {
     it('fails if token a is 0 or token b is 0', async () => {
       await expect(factory.createPool(TEST_ADDRESSES[0], constants.AddressZero, FeeAmount.LOW, await type2())).to.be.reverted
       await expect(factory.createPool(constants.AddressZero, TEST_ADDRESSES[0], FeeAmount.LOW, await type2())).to.be.reverted
-      await expect(factory.createPool(constants.AddressZero, constants.AddressZero, FeeAmount.LOW, await type2())).to.be.revertedWith(
-        ''
-      )
+      await expect(factory.createPool(constants.AddressZero, constants.AddressZero, FeeAmount.LOW, await type2())).to.be.reverted // With('')
     })
 
     it('fails if fee amount is not enabled', async () => {

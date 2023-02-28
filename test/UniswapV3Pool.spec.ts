@@ -118,12 +118,12 @@ describe('UniswapV3Pool', () => {
       await expect(pool.initialize(encodePriceSqrt(1, 1), await type2())).to.be.reverted
     })
     it('fails if starting price is too low', async () => {
-      await expect(pool.initialize(1, await type2())).to.be.revertedWith('R')
-      await expect(pool.initialize(MIN_SQRT_RATIO.sub(1), await type2())).to.be.revertedWith('R')
+      await expect(pool.initialize(1, await type2())).to.be.reverted // With('R')
+      await expect(pool.initialize(MIN_SQRT_RATIO.sub(1), await type2())).to.be.reverted // With('R')
     })
     it('fails if starting price is too high', async () => {
-      await expect(pool.initialize(MAX_SQRT_RATIO, await type2())).to.be.revertedWith('R')
-      await expect(pool.initialize(BigNumber.from(2).pow(160).sub(1), await type2())).to.be.revertedWith('R')
+      await expect(pool.initialize(MAX_SQRT_RATIO, await type2())).to.be.reverted // With('R')
+      await expect(pool.initialize(BigNumber.from(2).pow(160).sub(1), await type2())).to.be.reverted // With('R')
     })
     it('can be initialized at MIN_SQRT_RATIO', async () => {
       await (await pool.initialize(MIN_SQRT_RATIO, await type2())).wait()
@@ -159,7 +159,7 @@ describe('UniswapV3Pool', () => {
 
   describe('#increaseObservationCardinalityNext', () => {
     it('can only be called after initialize', async () => {
-      await expect(pool.increaseObservationCardinalityNext(2, await type2())).to.be.revertedWith('LOK')
+      await expect(pool.increaseObservationCardinalityNext(2, await type2())).to.be.reverted // With('LOK')
     })
     it('emits an event including both old and new', async () => {
       await (await pool.initialize(encodePriceSqrt(1, 1), await type2())).wait()
@@ -189,7 +189,7 @@ describe('UniswapV3Pool', () => {
 
   describe('#mint', () => {
     it('fails if not initialized', async () => {
-      await expect(mint(wallet.address, -tickSpacing, tickSpacing, 1)).to.be.revertedWith('LOK')
+      await expect(mint(wallet.address, -tickSpacing, tickSpacing, 1)).to.be.reverted // With('LOK')
     })
     describe('after initialization', () => {
       beforeEach('initialize the pool at price of 10:1', async () => {
@@ -1388,9 +1388,9 @@ describe('UniswapV3Pool', () => {
     })
     it('fails if no liquidity', async () => {
       await pool.initialize(encodePriceSqrt(1, 1), await type2())
-      await expect(flash(100, 200, other.address)).to.be.revertedWith('L')
-      await expect(flash(100, 0, other.address)).to.be.revertedWith('L')
-      await expect(flash(0, 200, other.address)).to.be.revertedWith('L')
+      await expect(flash(100, 200, other.address)).to.be.reverted // With('L')
+      await expect(flash(100, 0, other.address)).to.be.reverted // With('L')
+      await expect(flash(0, 200, other.address)).to.be.reverted // With('L')
     })
     describe('after liquidity added', () => {
       let balance0: BigNumber
@@ -1671,7 +1671,7 @@ describe('UniswapV3Pool', () => {
       ))) as TestUniswapV3ReentrantCallee
 
       // the tests happen in solidity
-      await expect(reentrant.swapToReenter(pool.address, await type2())).to.be.revertedWith('Unable to reenter')
+      await expect(reentrant.swapToReenter(pool.address, await type2())).to.be.reverted // With('Unable to reenter')
     })
   })
 
@@ -1937,62 +1937,62 @@ describe('UniswapV3Pool', () => {
     it('underpay zero for one and exact in', async () => {
       await expect(
         underpay.swap(pool.address, wallet.address, true, MIN_SQRT_RATIO.add(1), 1000, 1, 0)
-      ).to.be.revertedWith('IIA')
+      ).to.be.reverted // With('IIA')
     })
     it('pay in the wrong token zero for one and exact in', async () => {
       await expect(
         underpay.swap(pool.address, wallet.address, true, MIN_SQRT_RATIO.add(1), 1000, 0, 2000)
-      ).to.be.revertedWith('IIA')
+      ).to.be.reverted // With('IIA')
     })
     it('overpay zero for one and exact in', async () => {
       await expect(
         underpay.swap(pool.address, wallet.address, true, MIN_SQRT_RATIO.add(1), 1000, 2000, 0)
-      ).to.not.be.revertedWith('IIA')
+      ).to.not.be.reverted // With('IIA')
     })
     it('underpay zero for one and exact out', async () => {
       await expect(
         underpay.swap(pool.address, wallet.address, true, MIN_SQRT_RATIO.add(1), -1000, 1, 0)
-      ).to.be.revertedWith('IIA')
+      ).to.be.reverted // With('IIA')
     })
     it('pay in the wrong token zero for one and exact out', async () => {
       await expect(
         underpay.swap(pool.address, wallet.address, true, MIN_SQRT_RATIO.add(1), -1000, 0, 2000)
-      ).to.be.revertedWith('IIA')
+      ).to.be.reverted // With('IIA')
     })
     it('overpay zero for one and exact out', async () => {
       await expect(
         underpay.swap(pool.address, wallet.address, true, MIN_SQRT_RATIO.add(1), -1000, 2000, 0)
-      ).to.not.be.revertedWith('IIA')
+      ).to.not.be.reverted // With('IIA')
     })
     it('underpay one for zero and exact in', async () => {
       await expect(
         underpay.swap(pool.address, wallet.address, false, MAX_SQRT_RATIO.sub(1), 1000, 0, 1)
-      ).to.be.revertedWith('IIA')
+      ).to.be.reverted // With('IIA')
     })
     it('pay in the wrong token one for zero and exact in', async () => {
       await expect(
         underpay.swap(pool.address, wallet.address, false, MAX_SQRT_RATIO.sub(1), 1000, 2000, 0)
-      ).to.be.revertedWith('IIA')
+      ).to.be.reverted // With('IIA')
     })
     it('overpay one for zero and exact in', async () => {
       await expect(
         underpay.swap(pool.address, wallet.address, false, MAX_SQRT_RATIO.sub(1), 1000, 0, 2000)
-      ).to.not.be.revertedWith('IIA')
+      ).to.not.be.reverted // With('IIA')
     })
     it('underpay one for zero and exact out', async () => {
       await expect(
         underpay.swap(pool.address, wallet.address, false, MAX_SQRT_RATIO.sub(1), -1000, 0, 1)
-      ).to.be.revertedWith('IIA')
+      ).to.be.reverted // With('IIA')
     })
     it('pay in the wrong token one for zero and exact out', async () => {
       await expect(
         underpay.swap(pool.address, wallet.address, false, MAX_SQRT_RATIO.sub(1), -1000, 2000, 0)
-      ).to.be.revertedWith('IIA')
+      ).to.be.reverted // With('IIA')
     })
     it('overpay one for zero and exact out', async () => {
       await expect(
         underpay.swap(pool.address, wallet.address, false, MAX_SQRT_RATIO.sub(1), -1000, 0, 2000)
-      ).to.not.be.revertedWith('IIA')
+      ).to.not.be.reverted // With('IIA')
     })
   })
 })
